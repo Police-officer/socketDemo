@@ -26,29 +26,35 @@ class ConnectionThread extends Thread {
                 isRunning = false;
                 break;
             }
-            BufferedReader reader;
+//             BufferedReader reader;
             try {
-                reader = new BufferedReader(new InputStreamReader(
-                                            socket.getInputStream()));
-                String rawMessage = reader.readLine();
-                String messageFlag = rawMessage.substring(0, 1);
-                String message = rawMessage.substring(1);
+//                 reader = new BufferedReader(new InputStreamReader(
+//                                             socket.getInputStream()));
+//                 String rawMessage = reader.readLine();
+//                 String messageFlag = rawMessage.substring(0, 1);
+//                 String message = rawMessage.substring(1);
 
-                // Check the message flag.
-                switch (messageFlag) {
-                case MessageFlag.pureMessage:
-                    // Handle the message.
-                    if (message != null) {
-                        socketServer.getMessageHandler().onReceive(connection, message);
-                    }
-                    break;
-                case MessageFlag.connectionClosed:
-                    stopRunning();
-                    break;
-                default:
-                    break;
-                }
-
+//                 // Check the message flag.
+//                 switch (messageFlag) {
+//                 case MessageFlag.pureMessage:
+//                     // Handle the message.
+//                     if (message != null) {
+//                         socketServer.getMessageHandler().onReceive(connection, message);
+//                     }
+//                     break;
+//                 case MessageFlag.connectionClosed:
+//                     stopRunning();
+//                     break;
+//                 default:
+//                     break;
+//                 }
+                   InputStream is = socket.getInputStream();
+                   byte[] by = new byte[1024];
+                   is.read(by);
+                   if(by.length > 0){
+                      socketServer.getMessageHandler().onReceive(connection, by);
+                       break;
+                   }
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
